@@ -1,71 +1,76 @@
-# CrewAI Assignment — Agent Modification and Output Comparison
+# CrewAI Build Report
 
-## 1. Introduction
+**Name:** Shree Harshini Mamidala  
+**Topic I used:** How AI helps detect potential drug side effects
 
-For this assignment, I worked with a CrewAI multi-agent system consisting of a Research Analyst, Technical Writer, and Editor. The goal was to understand how changing an agent's instructions could influence the final output of a collaborative AI workflow.
+## 1. What I changed
 
-I selected the topic **"How AI helps detect potential drug side effects"** because it connects with my interest in healthcare AI and pharmacovigilance.
+For this assignment, I worked with the CrewAI starter kit and modified the Writer agent in `crewai-kit/main.py`. The original agent was called **Technical Writer**, and its goal was to explain a topic clearly to someone outside the field.
 
-I completed two runs using the same topic and the GPT-OSS 20B model through Groq. In the first run, I used the original agents. In the second run, I modified only the Writer agent's role, goal, and backstory.
+I changed its role to **Healthcare AI Explainer** because my topic focuses on identifying potential drug side effects using artificial intelligence. I wanted the explanation to be understandable to someone without a healthcare or technical background.
 
-## 2. Original Agent — Run 1
+I updated the agent's role, goal, and backstory. The new instructions asked the agent to use relatable examples, explain the difference between a suspected safety signal and a confirmed side effect, and emphasize why healthcare experts must review AI findings. I also instructed it to avoid inventing statistics and scientific references.
 
-The original Writer had the following configuration:
+I kept the Research Analyst and Editor agents unchanged so I could observe how modifying the Writer influenced the final explanation.
 
-- **Role:** Technical Writer
-- **Goal:** Explain the topic to a smart reader outside the field.
-- **Backstory:** Turn dense technical material into clear, jargon-free prose.
+## 2. How CrewAI works
 
-The generated explanation focused on how AI analyzes electronic health records, clinical notes, chemical information, and other sources to identify potential drug safety concerns.
+CrewAI is a framework that allows multiple AI agents to work together on a shared objective. Instead of asking one AI model to complete everything, CrewAI divides the work among agents with different responsibilities.
 
-It also discussed techniques such as natural language processing, deep learning, and Bayesian networks.
+In my project, the **Research Analyst** gathers and organizes information about the topic. The **Writer** uses that information to create an explanation, and the **Editor** reviews the explanation to improve its clarity and quality.
 
-Although the explanation contained useful technical information, it used specialized terminology that might be difficult for readers without a healthcare or data science background.
+Each agent has a role, goal, and backstory that guide how it approaches its work. A **task** defines what an agent is expected to produce, while a **crew** brings the agents and tasks together into a coordinated workflow.
 
-## 3. Modified Agent — Run 2
+The crew executes the tasks sequentially, so the output from one stage can provide context for the next stage. This allows the agents to collaborate instead of working independently.
 
-For the second run, I changed the Writer agent into a **Healthcare AI Explainer**.
+My modification worked because the Writer received more specific instructions about its audience and the type of explanation it should produce. Even though the overall workflow stayed the same, the Writer approached its task differently.
 
-The modified agent was instructed to explain healthcare AI using simpler language and relatable examples. I also asked it to distinguish suspected drug safety signals from confirmed side effects, discuss AI's limitations, and emphasize the importance of human oversight.
+This helped me understand that an agent's configuration can influence the final result without changing the structure of the entire multi-agent system.
 
-The Research Analyst and Editor agents remained unchanged.
+## 3. Evidence
 
-The modified output used a more structured presentation, including numbered sections, a comparison table, and a separate discussion of human oversight.
+I compared the outputs from two executions using the same topic and GPT-OSS 20B model.
 
-## 4. Comparison of Results
+**Run 1 — `submission/explainer_run1.md`:**
 
-The biggest difference between the two outputs was how the information was presented.
+The original Technical Writer produced a research-oriented explanation. It discussed electronic health records, natural language processing, deep learning, and Bayesian networks. The information was presented mainly in paragraphs and included technical terminology such as cardiotoxicity and pharmacovigilance.
 
-**Clarity and readability:** The original explanation was more technical and written primarily in paragraphs. The modified explanation used headings, numbered points, and analogies, making it easier to follow.
+**Run 2 — `submission/explainer_run2.md`:**
 
-**Healthcare safety:** The modified explanation explicitly distinguished between a suspected safety signal and a confirmed side effect. This was an important improvement because identifying an unusual pattern does not automatically prove that a medication caused a medical problem.
+The modified Healthcare AI Explainer produced a more structured explanation with headings, numbered sections, and a comparison table. It explicitly explained the difference between suspected safety signals and confirmed side effects and emphasized the importance of human oversight.
 
-**Human oversight:** The modified output gave greater attention to the role of healthcare professionals in reviewing AI-generated findings. It explained that AI can identify patterns but cannot independently establish clinical causation.
+The second output was easier to navigate, although it still contained some technical terminology.
 
-**Limitations:** Both outputs included `[source needed]` placeholders instead of complete scientific references. The modified output also retained technical terms such as protein-ligand interactions and QT-interval prolongation. Therefore, the changes improved communication but did not fully eliminate jargon or guarantee factual verification.
+**What went wrong:**
 
-## 5. Challenges Encountered
+During execution, I encountered an error where CrewAI received an empty response from the language model. I tested the Groq API independently to confirm that it could generate responses. I also encountered a Windows Unicode encoding error while printing the final output. I addressed this by configuring Python's output streams to use UTF-8.
 
-During execution, I encountered an error where CrewAI received an empty response from the language model. I tested the Groq API independently and confirmed that it could generate text successfully.
+Both outputs also contained `[source needed]` placeholders, showing that the generated claims required further verification.
 
-I also encountered a Windows Unicode encoding error when printing the final result in PowerShell. The generated Markdown file was saved successfully despite the terminal error. I addressed the printing issue by configuring Python's output streams to use UTF-8.
+## 4. Choosing a framework
 
-To make the comparison more consistent, I used GPT-OSS 20B for both the original and modified agent runs.
+I would choose CrewAI for a project like this because it makes it easy to organize different responsibilities among specialized AI agents.
 
-These challenges helped me understand the importance of separating API connectivity, agent execution, and terminal output issues when debugging an AI workflow.
+For example, in a healthcare AI project, one agent could collect and summarize drug safety information, another could interpret potential safety signals, and another could explain the findings to healthcare professionals. CrewAI provides a straightforward way to assign these responsibilities through agent roles, goals, and tasks.
 
-## 6. What I Learned
+One advantage I noticed was that I could change the Writer's behavior without redesigning the entire workflow. This makes CrewAI useful for projects where multiple agents collaborate to produce a final result.
 
-This experiment showed me that an AI agent's role, goal, and backstory can influence the style, structure, and emphasis of its output.
+Another framework we discussed in class is **LangGraph**. LangGraph would be useful if I needed more detailed control over the workflow, including conditional decisions, loops, or repeated evaluation steps.
 
-The original Writer provided a technical overview, while the Healthcare AI Explainer presented the topic in a more accessible way and placed greater emphasis on patient safety.
+However, for this assignment, LangGraph would likely require more explicit workflow design. CrewAI was easier to use because the starter kit already organized the agents and tasks into a sequential process.
 
-I also learned that better prompting does not automatically guarantee accurate references, complete adherence to instructions, or the removal of technical jargon. AI-generated content still requires evaluation and human review.
+I would prefer CrewAI for a straightforward collaborative workflow and consider LangGraph when a project requires more complex decision-making or customized execution paths.
 
-## 7. Conclusion
+## 5. Verification and AI use
 
-Changing a single agent's instructions produced a noticeable difference in the final explanation without requiring changes to the overall multi-agent workflow.
+I verified the results by reviewing both generated Markdown files and comparing their structure, terminology, and explanations.
 
-The modified Writer was better suited to explaining healthcare AI concepts to a general audience, especially when discussing potential drug side effects and the need for human oversight.
+I checked whether the modified output followed the new Writer instructions, particularly whether it explained suspected safety signals, distinguished them from confirmed side effects, and included human oversight.
 
-This assignment demonstrated how agent customization can make multi-agent AI systems more useful for specific audiences while reinforcing the importance of evaluating their outputs carefully.
+I also checked the terminal logs to confirm that the workflow generated output files successfully. To troubleshoot the language model errors, I tested the Groq API independently and verified which model was being used.
+
+Because the starter kit does not have web access, its agents generated information using the language model's existing knowledge rather than retrieving current scientific sources. Both outputs contained `[source needed]` placeholders. I therefore treated the scientific claims as unverified rather than assuming they were correct.
+
+I used ChatGPT to help troubleshoot CrewAI execution errors, adjust the model configuration, resolve terminal encoding issues, and organize the comparison report. I verified the technical suggestions by running the commands in Cursor and examining the generated outputs and logs.
+
+This assignment reinforced the importance of evaluating AI-generated explanations rather than relying on them without review.
